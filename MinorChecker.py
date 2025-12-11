@@ -77,7 +77,7 @@ class MinorChecker:
         self.has_run = True
         self.runtime = time.time()-start
 
-    def output_solution(self):
+    def get_solution(self):
         if not self.has_run:
             raise RuntimeError("Algorithm has not run yet")
         if not self.satisfiable:
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     minor_checker.run()
     print(f"Contains minor: {minor_checker.contains_minor()}")
     if minor_checker.contains_minor():
-        print(f"Assignment: {minor_checker.output_solution()}")
+        print(f"Assignment: {minor_checker.get_solution()}")
 
 
 
