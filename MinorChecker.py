@@ -1,4 +1,5 @@
 import argparse
+import math
 import pickle
 
 import networkx as nx
@@ -30,6 +31,12 @@ class MinorChecker:
         self.runtime = 0
     def run(self):
         start = time.time()
+        # Trivial lower bound: the graph must contain at least as many edges as a k-clique
+        if self.graph.number_of_edges() < self.k*(self.k-1)/2:
+            self.satisfiable = False
+            self.has_run = True
+            self.runtime = time.time() - start
+            return
         # Constraining orders
         for i in range(self.k):
             #There must be one root for every partition
