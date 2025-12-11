@@ -11,20 +11,18 @@ from pathlib import Path
 class MinorChecker:
     def __init__(self, graph:nx.Graph,k):
         self.graph:nx.Graph = graph
+        self.n = self.graph.number_of_nodes()
         self.k = k
         self.has_run = False
         self.cadical = Cadical195()
         self.satisfiable = False
         self.pool = IDPool()
-        self.diameter = 0
-        for component in nx.connected_components(graph):
-            self.diameter = max(self.diameter,nx.diameter(self.graph.subgraph(component)))
 
         for i in range(self.k):
             for v in self.graph.nodes():
                 self.pool.id((v,i))
             for v in self.graph.nodes():
-                for o in range(self.diameter):
+                for o in range(self.n):
                     self.pool.id((v, o, i))
             for j in range(self.k):
                 for u, v in graph.edges():
@@ -38,14 +36,14 @@ class MinorChecker:
             self.cadical.append_formula(card.CardEnc.equals(
                 [self.pool.id((v,0,i)) for v in self.graph.nodes()], vpool=self.pool))
             for v in self.graph.nodes():
-                for o in range(self.diameter):
+                for o in range(self.n):
                     pass
                     # v can only be assigned to order o in i if it is assigned to i
                     self.cadical.add_clause([-self.pool.id((v,o,i)),self.pool.id((v,i))])
                 # v can only be assigned to exactly one order
                 self.cadical.append_formula(
-                    card.CardEnc.atmost([self.pool.id((v,o,i)) for o in range(self.diameter)], vpool=self.pool))
-                self.cadical.add_clause([self.pool.id((v,o,i)) for o in range(self.diameter)]+[-self.pool.id((v,i))])
+                    card.CardEnc.atmost([self.pool.id((v,o,i)) for o in range(self.n)], vpool=self.pool))
+                self.cadical.add_clause([self.pool.id((v,o,i)) for o in range(self.n)]+[-self.pool.id((v,i))])
 
         # Each vertex assigned to at most one partition
         for v in self.graph.nodes():
@@ -55,7 +53,7 @@ class MinorChecker:
         #Connectivity constraints
         for i in range(self.k):
             for v in self.graph.nodes():
-                for o in range(1,self.diameter):
+                for o in range(1,self.n):
                     pass
                     # Vertex v can only be assigned to i in order of o if it has a neighbor assigned to i in order o-1
                     self.cadical.add_clause([-self.pool.id((v,o,i))]+
@@ -67,7 +65,7 @@ class MinorChecker:
                 for u, v in self.graph.edges():
                     self.cadical.add_clause([self.pool.id((u,i)),-self.pool.id((u,v,i,j))])
                     self.cadical.add_clause([self.pool.id((v, j)), -self.pool.id((u, v, i, j))])
-                if i > j: continue
+                if i >= j: continue
                 self.cadical.add_clause(
                     sum(([self.pool.id((u,v,i,j)),self.pool.id((u,v,j,i))] for u,v in self.graph.edges()),start = [])
                 )
