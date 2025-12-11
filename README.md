@@ -1,15 +1,15 @@
-## Checking graph minors
+# Checking graph minors
 
 This is a simple python script that checks if a given graph contains a $k$-clique as a minor. It works by encoding the problem in CNF form, which is then solved with [CaDiCal](https://github.com/arminbiere/cadical).
 
-# Dependencies
+## Dependencies
 
 The software uses [NetworkX](https://github.com/networkx/networkx) and [PySAT](https://github.com/pysathq/pysat), which can be installed with
 ```
  pip install networkx && pip install python-sat
 ```
 
-# Usage
+## Usage
 When using the command line, run the script with:
 ```
 python MinorChecker.py <input graph> <k>
