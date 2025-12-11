@@ -14,7 +14,7 @@ When using the command line, run the script with:
 ```
 python MinorChecker.py <input graph> <k>
 ```
-where <input graph> is a either a text file containing the graph in DIMACS format or a .pkl/.pickle object containing a networkx graph and k is an integer specifying the size of the clique minor to check.
+where ``<input graph>`` is a either a text file containing the graph in DIMACS format or a .pkl/.pickle object containing a networkx graph and ``k`` is an integer specifying the size of the clique minor to check.
 Alternatively, when using the software as a module it can be used as follows
 ```
 minor_checker = MinorChecker(graph,k) # where graph is an nx graph and k the size of the clique
