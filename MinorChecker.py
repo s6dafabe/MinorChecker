@@ -105,6 +105,7 @@ class MinorChecker:
 def check_solution(solution,graph:nx.Graph,k):
     partition_map = [[] for _ in range(k)]
     for v,i in enumerate(solution):
+        if solution[v] < 0: continue
         partition_map[i].append(v)
     for i,part in enumerate(partition_map):
         if len(part) == 0: return False
